@@ -6,7 +6,7 @@ public class PlayerStats : MonoBehaviour
     public int health = 100;
     public int maxHealth = 100;
     public float regenDelay = 5f;      // Wait 5 seconds before starting regen
-    public float regenDuration = 5f;   // Heal to full over 5 seconds
+    public float healInterval = 0.1f;  // Heal 1 HP every 0.1 seconds
 
     public float damage = 10f;
     public float fireRate = 5f; // bullets per second
@@ -33,7 +33,11 @@ public class PlayerStats : MonoBehaviour
         OnHealthChanged?.Invoke();
 
         if (regenCoroutine != null)
+        {
             StopCoroutine(regenCoroutine);
+            regenCoroutine = null;
+        }
+        // Start regen after delay
         regenCoroutine = StartCoroutine(HealthRegen());
     }
 
@@ -47,19 +51,12 @@ public class PlayerStats : MonoBehaviour
     {
         yield return new WaitForSeconds(regenDelay);
 
-        int startHealth = health;
-        float elapsed = 0f;
-
-        while (elapsed < regenDuration && health < maxHealth)
+        while (health < maxHealth)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / regenDuration);
-            health = Mathf.RoundToInt(Mathf.Lerp(startHealth, maxHealth, t));
+            health = Mathf.Min(health + 1, maxHealth);
             OnHealthChanged?.Invoke();
-            yield return null;
+            yield return new WaitForSeconds(healInterval);
         }
-
-        health = maxHealth;
-        OnHealthChanged?.Invoke();
+        regenCoroutine = null;
     }
 }

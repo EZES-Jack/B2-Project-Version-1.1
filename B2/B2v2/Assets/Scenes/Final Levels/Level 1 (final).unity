@@ -4041,7 +4041,11 @@ PrefabInstance:
       objectReference: {fileID: 23800000, guid: c314507e6ba38534cbdf04c49edf40df, type: 2}
     - target: {fileID: 9123931844238021363, guid: 2c194af46f5d1ef44a75cdedd45256d6, type: 3}
       propertyPath: m_MinRegionArea
-      value: -0
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123931844238021363, guid: 2c194af46f5d1ef44a75cdedd45256d6, type: 3}
+      propertyPath: m_BuildHeightMesh
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9123931844238021363, guid: 2c194af46f5d1ef44a75cdedd45256d6, type: 3}
       propertyPath: m_OverrideTileSize
@@ -4049,7 +4053,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9123931844238021363, guid: 2c194af46f5d1ef44a75cdedd45256d6, type: 3}
       propertyPath: m_OverrideVoxelSize
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
