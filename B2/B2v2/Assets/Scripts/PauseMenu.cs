@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
@@ -20,8 +21,7 @@ public class PauseMenu : MonoBehaviour
                 Pause();
         }
     }
-    
-    
+
     public void RestartLevel()
     {
         Time.timeScale = 1f; // Ensure game is unpaused
@@ -46,5 +46,32 @@ public class PauseMenu : MonoBehaviour
     {
         Debug.Log("Quitting game...");
         Application.Quit();
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        if (!string.IsNullOrEmpty(sceneName))
+        {
+            Time.timeScale = 1f; // Ensure game is unpaused
+            SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            Debug.LogWarning("Scene name is empty or null!");
+        }
+    }
+
+    public void LoadPreviousScene()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (currentSceneIndex > 0)
+        {
+            Time.timeScale = 1f; // Ensure game is unpaused
+            SceneManager.LoadScene(currentSceneIndex - 1);
+        }
+        else
+        {
+            Debug.LogWarning("No previous scene to load!");
+        }
     }
 }
