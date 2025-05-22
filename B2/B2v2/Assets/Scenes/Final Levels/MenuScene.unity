@@ -515,7 +515,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Settings
+  m_text: Play (Hard)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -740,8 +740,9 @@ GameObject:
   - component: {fileID: 935057423}
   - component: {fileID: 935057422}
   - component: {fileID: 935057426}
+  - component: {fileID: 935057427}
   m_Layer: 5
-  m_Name: Settings
+  m_Name: Play (Hard)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -864,6 +865,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverSound: {fileID: 8300000, guid: e7c6da04c0b355b42b31c5dacda888bd, type: 3}
   clickSound: {fileID: 8300000, guid: 1fa59735e3f4fcf4d80c7eb6de87478d, type: 3}
+--- !u!114 &935057427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935057420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c8adf6d7448a94ca0f641f5125f7eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yourButton: {fileID: 935057422}
 --- !u!1 &1061610778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,7 +1026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f173a3d0595bc44478702060604ed2dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yourButton: {fileID: 1061610780}
+  yourButton: {fileID: 0}
 --- !u!114 &1061610785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1179,7 +1193,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Play
+  m_text: Play (Easy)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1416,7 +1430,7 @@ GameObject:
   - component: {fileID: 1800984420}
   - component: {fileID: 1800984424}
   m_Layer: 5
-  m_Name: Play
+  m_Name: Play (Easy)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1563,6 +1577,7 @@ GameObject:
   - component: {fileID: 1854922442}
   - component: {fileID: 1854922441}
   - component: {fileID: 1854922440}
+  - component: {fileID: 1854922443}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1620,6 +1635,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1854922443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854922439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db2caf79ff9e53429f0e659fe8c5fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modeConfigs:
+  - button: {fileID: 1800984421}
+    enemyRange: 15
+    variantRange: 20
+  - button: {fileID: 935057422}
+    enemyRange: 500
+    variantRange: 500
 --- !u!1 &1991398661
 GameObject:
   m_ObjectHideFlags: 0

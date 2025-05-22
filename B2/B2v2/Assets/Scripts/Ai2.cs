@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Ai2 : MonoBehaviour
 {
-    public float detectionRange = 10f;
     public float attackRange = 2f;
     public float rotationSpeed = 2f;
     public float moveSpeed = 3f;
@@ -21,6 +20,7 @@ public class Ai2 : MonoBehaviour
     {
         if (player == null) return;
 
+        float detectionRange = Modes.CurrentVariantRange; 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer <= detectionRange)
         {
@@ -37,7 +37,6 @@ public class Ai2 : MonoBehaviour
             {
                 transform.position += direction * moveSpeed * Time.deltaTime;
             }
-            // No attack or damage logic here
         }
     }
 
