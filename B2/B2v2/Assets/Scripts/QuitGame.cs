@@ -18,16 +18,14 @@ public class QuitGame : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
-            Debug.Log("Escape");
-        }
+            Application.Quit();}
     }
 
     void OnButtonClick()
     {
         Application.Quit();
     }
-    
+
     public void Quit()
     {
         Application.Quit();

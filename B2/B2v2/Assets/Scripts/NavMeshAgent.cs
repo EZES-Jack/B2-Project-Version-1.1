@@ -11,16 +11,14 @@ public class AgentFollowPlayer : MonoBehaviour
     [SerializeField] private float distance = 0.4f;
     [SerializeField] private float enemyRadius = 0.4f;
     [SerializeField] private float enemyDistance = 0.4f;
-    
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (player == null)
-        {
-            Debug.LogError("Player object not found!");
-        }
+        {}
     }
 
     void Update()
@@ -30,17 +28,13 @@ public class AgentFollowPlayer : MonoBehaviour
             agent.SetDestination(player.transform.position);
         }
 
-        agent.isStopped = (Physics.SphereCast(transform.position, radius, transform.forward, out RaycastHit hit, distance, LayerMask.GetMask("Player")) 
+        agent.isStopped = (Physics.SphereCast(transform.position, radius, transform.forward, out RaycastHit hit, distance, LayerMask.GetMask("Player"))
                            || Physics.SphereCast(transform.position, enemyRadius, transform.forward, out RaycastHit hit2, enemyDistance, LayerMask.GetMask("Enemy")));
     }
 
     public void OnTriggerEnter(Collider collision)
-    {
-        Debug.Log("test");
-        if (collision.gameObject.CompareTag("Player"))
+    {if (collision.gameObject.CompareTag("Player"))
         {
-            agent.isStopped = true;
-            Debug.Log("Collision with Player detected!");
-        }
+            agent.isStopped = true;}
     }
 }

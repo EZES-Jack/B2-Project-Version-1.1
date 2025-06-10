@@ -20,7 +20,7 @@ public class Ai2 : MonoBehaviour
     {
         if (player == null) return;
 
-        float detectionRange = Modes.CurrentVariantRange; 
+        float detectionRange = Modes.CurrentVariantRange;
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (distanceToPlayer <= detectionRange)
         {
@@ -42,9 +42,7 @@ public class Ai2 : MonoBehaviour
 
     public void AssignRandomTagname(string randomTagname)
     {
-        Tagname = randomTagname;
-        Debug.Log("Assigned Tagname to Ai2: " + Tagname);
-    }
+        Tagname = randomTagname;}
 
     void OnCollisionEnter(Collision collision)
     {

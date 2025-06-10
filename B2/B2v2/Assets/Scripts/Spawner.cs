@@ -48,13 +48,13 @@ public class Spawner : MonoBehaviour
                     GameObject enemyInstance = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
                     spawnedZombies.Add(enemyInstance);
 
-                    string randomTagname = possibleTagnames[Random.Range(0, possibleTagnames.Count)];
-                    
-                    var zombieAI = enemyInstance.GetComponent<ZombieAI>();
+                    string randomTagname = possibleTagnames[Random.Range(0, possibleTagnames.Count)];   // Select a random tagname
+
+                    var zombieAI = enemyInstance.GetComponent<ZombieAI>();  // Check if the enemy has ZombieAI component
                     if (zombieAI != null)
                     {
-                        zombieAI.Tagname = randomTagname;
-                        zombieAI.OnDestroyEvent += OnZombieDestroyed;
+                        zombieAI.Tagname = randomTagname;   // Assign the random tagname
+                        zombieAI.OnDestroyEvent += OnZombieDestroyed;   // Subscribe to the OnDestroyEvent
                     }
                     else
                     {
@@ -123,10 +123,7 @@ public class Spawner : MonoBehaviour
     {
         spawnedZombies.Remove(zombie);
         spawnerHealth -= healthLossPerZombie;
-        UpdateHealthText();
-        Debug.Log("Spawner health: " + spawnerHealth);
-
-        if (spawnerHealth <= 0)
+        UpdateHealthText();if (spawnerHealth <= 0)
         {
             for (int i = 0; i < zombiesOnDestroy; i++)
             {
@@ -144,18 +141,14 @@ public class Spawner : MonoBehaviour
                     if (zombieAI != null)
                     {
                         zombieAI.Tagname = randomTagname;
-                        zombieAI.OnDestroyEvent += OnZombieDestroyed;
-                        Debug.Log("Spawned ZombieAI with Tagname: " + randomTagname);
-                    }
+                        zombieAI.OnDestroyEvent += OnZombieDestroyed;}
                     else
                     {
                         var ai2 = enemyInstance.GetComponent<Ai2>();
                         if (ai2 != null)
                         {
                             ai2.Tagname = randomTagname;
-                            ai2.OnDestroyEvent += OnZombieDestroyed;
-                            Debug.Log("Spawned Ai2 with Tagname: " + randomTagname);
-                        }
+                            ai2.OnDestroyEvent += OnZombieDestroyed;}
                     }
                 }
             }
@@ -187,10 +180,7 @@ public class Spawner : MonoBehaviour
     public void TakeDamage(float damage)
     {
         spawnerHealth -= damage;
-        UpdateHealthText();
-        Debug.Log("Spawner health: " + spawnerHealth);
-
-        if (spawnerHealth <= 0)
+        UpdateHealthText();if (spawnerHealth <= 0)
         {
             foreach (var spawnedZombie in spawnedZombies)
             {

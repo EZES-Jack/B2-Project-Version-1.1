@@ -43,9 +43,7 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void QuitGame()
-    {
-        Debug.Log("Quitting game...");
-        Application.Quit();
+    {Application.Quit();
     }
 
     public void LoadScene(string sceneName)
@@ -56,9 +54,7 @@ public class PauseMenu : MonoBehaviour
             SceneManager.LoadScene(sceneName);
         }
         else
-        {
-            Debug.LogWarning("Scene name is empty or null!");
-        }
+        {}
     }
 
     public void LoadPreviousScene()
@@ -70,8 +66,6 @@ public class PauseMenu : MonoBehaviour
             SceneManager.LoadScene(currentSceneIndex - 1);
         }
         else
-        {
-            Debug.LogWarning("No previous scene to load!");
-        }
+        {}
     }
 }

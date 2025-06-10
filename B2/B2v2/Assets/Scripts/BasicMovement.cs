@@ -37,8 +37,6 @@ public class BasicMovement2 : MonoBehaviour
         {
             Vector3 playerPosition = transform.position;
             playerPosition.y = hit.point.y;
-            transform.position = playerPosition;
-            Debug.Log("Collision with Enemy detected!");
-        }
+            transform.position = playerPosition;}
     }
 }
