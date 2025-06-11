@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Modes : MonoBehaviour
 {
-    public static float CurrentEnemyRange = 15f;
-    public static float CurrentVariantRange = 20f;
+    public static float CurrentEnemyRange = 10f;
+    public static float CurrentVariantRange = 5f;
 
     [System.Serializable]
     public struct DetectionRangeConfig

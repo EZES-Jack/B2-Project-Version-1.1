@@ -193,6 +193,7 @@ MonoBehaviour:
   moveSpeed: 12
   Tagname: 1
   health: 150
+  playerDetected: 0
 --- !u!23 &1981975846917727893
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -335,6 +336,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4dd77f0a1bdab48b18d273c95387a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolRadius: 10
-  detectionRange: 15
-  player: {fileID: 6253793163820360005, guid: 6717865e4d4025e48922c6a5c9262f2b, type: 3}
+  targets:
+  - {fileID: 6253793163820360005, guid: 6717865e4d4025e48922c6a5c9262f2b, type: 3}

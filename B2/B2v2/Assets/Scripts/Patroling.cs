@@ -1,100 +1,98 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Patrolling : MonoBehaviour
+public class AssignTargetAndReturn : MonoBehaviour
 {
-    [SerializeField] private float detectionRange = 15f; // Full detection range
-    [SerializeField] private Transform player; // Reference to the player
+    [SerializeField] private float patrolRadius = 20f; // Radius for random target locations
     private NavMeshAgent agent;
-    private Vector3 spawnLocation; // Original spawn location
-    private Vector3 patrolPoint;
-    private bool isPlayerDetected = false;
-    private float originalSpeed; // Store the agent's original speed
-    private NavMeshQueryFilter queryFilter; // Query filter for NavMesh sampling
+    private Vector3 spawnLocation;
+    private Vector3 targetLocation;
+    private Vector3[] navMeshVertices;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        originalSpeed = agent.speed; // Save the original speed
-        agent.speed = 5f; // Set patrolling speed
-        spawnLocation = transform.position; // Store the original spawn location
-
-        // Initialize NavMeshQueryFilter
-        queryFilter = new NavMeshQueryFilter
+        if (agent == null)
         {
-            areaMask = NavMesh.AllAreas,
-            agentTypeID = agent.agentTypeID
-        };
+            Debug.LogError("Missing NavMeshAgent. Disabling script.");
+            enabled = false;
+            return;
+        }
 
-        SetRandomPatrolPoint();
+        spawnLocation = transform.position; // Save the spawn location
+
+        // Cache NavMesh vertices for performance
+        NavMeshTriangulation navMeshData = NavMesh.CalculateTriangulation();
+        navMeshVertices = navMeshData.vertices;
+
+        AssignRandomTarget(); // Assign the first random target
     }
 
     void Update()
     {
-        if (isPlayerDetected)
+        if (CompareTag("Variant"))
         {
-            agent.speed = originalSpeed; // Revert to original speed
-            agent.avoidancePriority = 50; // Disable wall avoidance
-            agent.isStopped = true; // Stop patrolling
-            return;
-        }
-
-        // Reduce detection range while patrolling
-        float currentDetectionRange = detectionRange / 2;
-
-        // Check if the player is within detection range
-        if (Vector3.Distance(transform.position, player.position) <= currentDetectionRange)
-        {
-            isPlayerDetected = true;
-            agent.avoidancePriority = 50; // Disable wall avoidance
-            return;
-        }
-
-        // Move to the patrol point
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
-        {
-            agent.avoidancePriority = 0; // Enable wall avoidance
-            SetRandomPatrolPoint(); // Set a new patrol point when the agent reaches the current one
-        }
-    }
-
-    private void SetRandomPatrolPoint()
-    {
-        int maxAttempts = 10; // Limit the number of attempts
-        for (int i = 0; i < maxAttempts; i++)
-        {
-            Vector3 randomDirection = GetRandomPointOnNavMesh();
-
-            if (Vector3.Distance(randomDirection, spawnLocation) >= 15f)
+            Ai2 ai2 = GetComponent<Ai2>();
+            if (ai2 != null && ai2.playerDetected)
             {
-                patrolPoint = randomDirection;
-                agent.SetDestination(patrolPoint);
+                DisableAgent();
                 return;
             }
         }
-        // If no valid point found, fallback to spawn location
-        patrolPoint = spawnLocation;
-        agent.SetDestination(patrolPoint);
-    }
-
-    private Vector3 GetRandomPointOnNavMesh()
-    {
-        Vector3 randomDirection = transform.position + Random.insideUnitSphere * detectionRange;
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, detectionRange, queryFilter))
+        else if (CompareTag("Enemy"))
         {
-            return hit.position;
+            ZombieAI zombieAI = GetComponent<ZombieAI>();
+            if (zombieAI != null && zombieAI.playerDetected)
+            {
+                DisableAgent();
+                return;
+            }
         }
 
-        return spawnLocation; // Fallback if no valid point is found
+        // Check if the agent has reached its destination
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
+            if (agent.destination == targetLocation)
+            {
+                agent.SetDestination(spawnLocation); // Return to spawn location
+            }
+            else
+            {
+                AssignRandomTarget(); // Assign a new random target
+            }
+        }
     }
 
-    // Draw detection ranges in the Scene view
-    private void OnDrawGizmosSelected()
+    private void AssignRandomTarget()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRange / 2); // Patrolling detection range
+        int maxRetries = 10; // Limit the number of retries
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRange); // Full detection range
+        for (int i = 0; i < maxRetries; i++)
+        {
+            // Generate a random point from cached NavMesh vertices
+            int randomIndex = Random.Range(0, navMeshVertices.Length);
+            Vector3 randomPoint = navMeshVertices[randomIndex];
+
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
+            {
+                if (Vector3.Distance(spawnLocation, hit.position) >= 20f) // Ensure the target is at least 20f away
+                {
+                    targetLocation = hit.position;
+                    agent.SetDestination(targetLocation);
+                    return;
+                }
+            }
+        }
+
+        // Fallback: If no valid target is found, return to spawn location
+        Debug.LogWarning("Failed to find a valid target location after max retries. Returning to spawn.");
+        targetLocation = spawnLocation;
+        agent.SetDestination(targetLocation);
+    }
+
+    private void DisableAgent()
+    {
+        agent.isStopped = true;
+        enabled = false;
     }
 }

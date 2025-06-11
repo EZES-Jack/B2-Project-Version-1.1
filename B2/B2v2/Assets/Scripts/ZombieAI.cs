@@ -13,7 +13,7 @@ public class ZombieAI : MonoBehaviour
 
     private Transform player;
     private NavMeshAgent navMeshAgent;
-    private bool playerDetected = false;
+    public bool playerDetected = false;
 
     void Start()
     {
