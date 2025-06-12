@@ -8,7 +8,7 @@ public class PlayerStats : MonoBehaviour
     public float regenDelay = 5f;      // Wait 5 seconds before starting regen
     public float healInterval = 0.1f;  // Heal 1 HP every 0.1 seconds
 
-    public float damage = 10f;
+    public float damage = 100f;
     public float fireRate = 5f; // bullets per second
     public int ammo = 30;
     public float moveSpeed = 5f;

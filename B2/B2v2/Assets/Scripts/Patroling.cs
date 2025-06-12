@@ -1,13 +1,30 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class AssignTargetAndReturn : MonoBehaviour
 {
-    [SerializeField] private float patrolRadius = 20f; // Radius for random target locations
+    [SerializeField] private float patrolRadius = 20f;
+    public GameObject alertAreaObject;
+
     private NavMeshAgent agent;
     private Vector3 spawnLocation;
     private Vector3 targetLocation;
     private Vector3[] navMeshVertices;
+
+    private static List<AssignTargetAndReturn> allAgents = new List<AssignTargetAndReturn>();
+    private static bool alertActive = false;
+    private static bool playerDetected = false; // New flag
+
+    void Awake()
+    {
+        allAgents.Add(this);
+    }
+
+    void OnDestroy()
+    {
+        allAgents.Remove(this);
+    }
 
     void Start()
     {
@@ -19,63 +36,50 @@ public class AssignTargetAndReturn : MonoBehaviour
             return;
         }
 
-        spawnLocation = transform.position; // Save the spawn location
-
-        // Cache NavMesh vertices for performance
+        spawnLocation = transform.position;
         NavMeshTriangulation navMeshData = NavMesh.CalculateTriangulation();
         navMeshVertices = navMeshData.vertices;
 
-        AssignRandomTarget(); // Assign the first random target
+        AssignRandomTarget();
     }
 
     void Update()
     {
-        if (CompareTag("Variant"))
-        {
-            Ai2 ai2 = GetComponent<Ai2>();
-            if (ai2 != null && ai2.playerDetected)
-            {
-                DisableAgent();
-                return;
-            }
-        }
-        else if (CompareTag("Enemy"))
-        {
-            ZombieAI zombieAI = GetComponent<ZombieAI>();
-            if (zombieAI != null && zombieAI.playerDetected)
-            {
-                DisableAgent();
-                return;
-            }
-        }
-
-        // Check if the agent has reached its destination
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
             if (agent.destination == targetLocation)
             {
-                agent.SetDestination(spawnLocation); // Return to spawn location
+                agent.SetDestination(spawnLocation);
             }
             else
             {
-                AssignRandomTarget(); // Assign a new random target
+                AssignRandomTarget();
             }
         }
     }
 
     private void AssignRandomTarget()
     {
-        int maxRetries = 10; // Limit the number of retries
+        if (alertAreaObject != null && alertActive)
+        {
+            targetLocation = alertAreaObject.transform.position;
+            agent.SetDestination(targetLocation);
+            return;
+        }
 
+        // Stop patrolling if player has been detected
+        if (playerDetected)
+            return;
+
+        int maxRetries = 10;
         for (int i = 0; i < maxRetries; i++)
         {
-            // Generate a random point from cached NavMesh vertices
             int randomIndex = Random.Range(0, navMeshVertices.Length);
             Vector3 randomPoint = navMeshVertices[randomIndex];
 
             if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
             {
-                if (Vector3.Distance(spawnLocation, hit.position) >= 20f) // Ensure the target is at least 20f away
+                if (Vector3.Distance(spawnLocation, hit.position) >= 20f)
                 {
                     targetLocation = hit.position;
                     agent.SetDestination(targetLocation);
@@ -84,15 +88,29 @@ public class AssignTargetAndReturn : MonoBehaviour
             }
         }
 
-        // Fallback: If no valid target is found, return to spawn location
-        Debug.LogWarning("Failed to find a valid target location after max retries. Returning to spawn.");
         targetLocation = spawnLocation;
         agent.SetDestination(targetLocation);
     }
 
-    private void DisableAgent()
+    public static void AlertAllAgents(GameObject areaObject)
     {
-        agent.isStopped = true;
-        enabled = false;
+        alertActive = true;
+        playerDetected = true; // Set flag on first detection
+        foreach (var agent in allAgents)
+        {
+            agent.alertAreaObject = areaObject;
+            agent.AssignRandomTarget();
+            agent.enabled = false; // Disable this script
+        }
+    }
+
+    public static void ClearAlert()
+    {
+        alertActive = false;
+        foreach (var agent in allAgents)
+        {
+            agent.alertAreaObject = null;
+            agent.AssignRandomTarget();
+        }
     }
 }
